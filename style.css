@@ -332,3 +332,187 @@ body {
     background-image: url(./Fundo\ Mobile\ Tela\ Login.svg);
   }
 }
+.post {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+.post.mine {
+  background-color: #e6ffe6;
+}
+.post.other {
+  background-color: #f9f9f9;
+}
+.post p {
+  margin: 5px 0;
+}
+.comments {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+.comments textarea {
+  width: 100%;
+}
+/* ===================== CHAT ===================== */
+
+/* ============================
+   Chat Styles
+============================ */
+
+#chat-box {
+    max-height: calc(100vh - 180px); /* espaço para header e chat-form */
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1); /* leve transparência */
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.chat-message {
+    padding: 12px 16px;
+    border-radius: 20px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Diferencia remetente e destinatário */
+.chat-message.sender {
+    align-self: flex-start;
+    background-color: #e0f7fa; /* azul clarinho */
+    color: #006064;
+}
+
+.chat-message.receiver {
+    align-self: flex-end;
+    background-color: #ffe0b2; /* laranja clarinho */
+    color: #bf360c;
+}
+
+/* Hover suave */
+.chat-message:hover {
+    transform: scale(1.02);
+}
+
+/* Pequeno destaque da hora */
+.chat-message p:first-child {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* ============================
+   Chat Form
+============================ */
+
+#chat-form {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background-color: #fff;
+    border-top: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.15);
+    gap: 10px;
+    z-index: 999;
+}
+
+#chat-form textarea {
+    flex: 1;
+    resize: none;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: 14px;
+    height: 40px;
+}
+
+#chat-form button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background-color: #005d7a;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+#chat-form button:hover {
+    background-color: #004055;
+    transform: scale(1.05);
+}
+
+/* ============================
+   Scrollbar bonito
+============================ */
+
+#chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* ============================
+   Responsividade
+============================ */
+@media (max-width: 768px) {
+    #chat-box {
+        max-height: calc(100vh - 150px);
+        padding: 10px;
+    }
+
+    #chat-form {
+        width: 95%;
+    }
+
+    #chat-form textarea {
+        height: 35px;
+        font-size: 13px;
+    }
+}
+
+.btn-video {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #005d7a;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-video:hover {
+    background-color: #007ea3;
+    transform: scale(0.95);
+}
+

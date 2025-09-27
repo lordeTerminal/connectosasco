@@ -26,18 +26,6 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Criação de post via POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_content'])) {
-    $post_content = trim($_POST['post_content']);
-    if ($post_content !== '') {
-        $stmtInsert = $pdo->prepare("INSERT INTO posts (user_id, content, post_date) VALUES (?, ?, NOW())");
-        $stmtInsert->execute([$user_id, $post_content]);
-        header('Location: profile.php');
-        exit();
-    }
-}
-
-// Buscar posts
 $query = "
     SELECT p.post_id, p.content, p.post_date, p.user_id, u.username
     FROM posts p
@@ -116,7 +104,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         main {
             margin-left: 220px;
-            margin-top: 140px; /* espaço para header + caixa de post */
+            margin-top: 70px;
             max-width: 700px;
             padding: 20px;
         }
@@ -148,34 +136,34 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             border-radius: 6px;
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 5px;
             font-family: inherit;
-            resize: vertical;
         }
-        .btn-postar {
+        button {
             background-color: #1877f2;
             color: #fff;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 5px;
         }
-        .btn-postar:hover {
+        button:hover {
             background-color: #145dc6;
         }
-        .create-post {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
         @media (max-width: 768px) {
-            .sidebar { width: 60px; }
-            .sidebar h2, .sidebar a { display: none; }
-            header { left: 60px; }
-            main { margin-left: 60px; }
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar h2, .sidebar a {
+                display: none;
+            }
+            header {
+                left: 60px;
+            }
+            main {
+                margin-left: 60px;
+            }
         }
     </style>
 </head>
@@ -184,7 +172,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="Logo Connect Osasco Branca.svg" alt="Logo">
         <h2>ConnectMed</h2>
         <a href="meu_perfil.php">Meu Perfil</a>
-        <a href="profile.php">Feed</a>
+        <a href="criar_post.php">Criar Post</a>
         <a href="user_list.php">Chat</a>
         <a href="events.php">Mural de Eventos</a>
         <a href="logout.php">Sair</a>
@@ -199,15 +187,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
     <main>
-        <!-- Caixa de criação de post -->
-        <div class="create-post">
-            <form method="POST" action="profile.php">
-                <textarea name="post_content" rows="3" placeholder="O que você está pensando?" required></textarea>
-                <button type="submit" class="btn-postar">Postar</button>
-            </form>
-        </div>
-
-        <!-- Feed de posts -->
+        <h2>Feed da Rede</h2>
         <?php foreach ($posts as $post): ?>
             <div class="post <?php echo $post['user_id'] == $user_id ? 'mine' : 'other'; ?>">
                 <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>

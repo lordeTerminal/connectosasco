@@ -32,6 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([$username, $email, $password, $role]);
 
     // Redirect to the login page or another appropriate location
-    header('Location: login.php');
+    header('Location: index.php');
 }
 ?>

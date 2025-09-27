@@ -1,211 +1,125 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
 error_reporting(E_ALL);
 
-// Database connection parameters
-$host = 'localhost';
-$username = 'root';
-$password = 'golimar10*';
-$database = 'saudeosasco';
+$host='localhost';
+$username='root';
+$password='golimar10*';
+$database='saudeosasco';
 
-// Attempt to connect to the database
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+try{
+    $pdo=new PDO("mysql:host=$host;dbname=$database;charset=utf8",$username,$password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+}catch(PDOException $e){
+    die("DB ERROR: ".$e->getMessage());
 }
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+if(!isset($_SESSION['user_id'])){
     header('Location: login.php');
     exit();
 }
 
-// Get the user information
-$user_id = $_SESSION['user_id'];
+$user_id=$_SESSION['user_id'];
+$stmt=$pdo->prepare("SELECT * FROM users WHERE user_id=?");
+$stmt->execute([$user_id]);
+$user=$stmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if a chat partner is selected
-if (isset($_GET['partner_id'])) {
-    $partner_id = $_GET['partner_id'];
-
-    // Fetch the partner's information
-    $query = "SELECT username FROM users WHERE user_id = ?";
-    $stmt = $pdo->prepare($query);
+$partner_id=isset($_GET['partner_id'])?intval($_GET['partner_id']):0;
+if($partner_id>0){
+    $stmt=$pdo->prepare("SELECT username FROM users WHERE user_id=?");
     $stmt->execute([$partner_id]);
-    $partner = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Fetch initial chat history
-    $chatHistory = fetchChatHistory($pdo, $user_id, $partner_id);
-} else {
-    // If no partner is selected, display a message
-    $partner = null;
-    $chatHistory = [];
+    $partner=$stmt->fetch(PDO::FETCH_ASSOC);
+}else{
+    $partner=null;
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with <?php echo $partner ? $partner['username'] : 'Select a Chat Partner'; ?></title>
-    <!-- Add your CSS styling here -->
-    <style>
-/* Add your CSS styles for chat messages */
-#chat-box {
-    max-height: calc(100vh - 80px); /* Adjust based on your header/footer heights */
-    overflow-y: auto;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column-reverse; /* Reverse the order of messages */
-    align-items: flex-start; /* Align items to the left by default */
-}
-
-.chat-message {
-    background-color: #f1f1f1;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 5px;
-    max-width: 70%; /* Adjust based on your design preference */
-    text-align: left; /* Align text to the left by default */
-}
-
-/* Reverse the order of the messages to display them in descending order */
-.chat-message.sender {
-    align-self: flex-start; /* Align sender messages to the left */
-}
-
-.chat-message.receiver {
-    align-self: flex-end; /* Align receiver messages to the right */
-}
-      #chat-form {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%; /* Adjust the width based on your design */
-    max-width: 400px; /* Set a maximum width if needed */
-    background-color: #f1f1f1;
-    padding: 15px;
-    box-sizing: border-box;
-    border-top: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-}
- 
-	/* Add your CSS styles for chat messages */
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            function updateChat() {
-                $.ajax({
-                    url: 'fetch_messages.php',
-                    method: 'POST',
-                    data: { partner_id: <?php echo $partner_id; ?> },
-                    success: function(response) {
-                        $('#chat-box').html(response);
-                    },
-                    complete: function() {
-                        setTimeout(updateChat, 5000); // Schedule the next update after a delay (e.g., every 5 seconds)
-                    }
-                });
-            }
-
-            // Initial update
-            updateChat();
-
-            // Add your additional JavaScript for sending messages if needed
-        });
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat com <?= $partner ? $partner['username'] : 'Selecione um usuário' ?></title>
+<link rel="icon" href="Logo Connect Osasco Branca.svg" type="image/svg+xml">
+<style>
+body{margin:0;font-family:"Segoe UI", Tahoma, sans-serif;background:#f0f2f5;color:#333;}
+header{position:fixed;top:0;left:220px;right:0;height:60px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 20px;z-index:10;}
+header img{height:35px;margin-right:10px;}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:#1877f2;color:#fff;display:flex;flex-direction:column;align-items:center;padding-top:20px;}
+.sidebar img{width:120px;margin-bottom:10px;}
+.sidebar h2{font-size:18px;margin-bottom:20px;}
+.sidebar a{color:#fff;text-decoration:none;margin:8px 0;display:block;width:100%;text-align:center;padding:8px;border-radius:8px;transition:background 0.2s;}
+.sidebar a:hover{background:rgba(255,255,255,0.2);}
+main{margin-left:220px;margin-top:70px;max-width:700px;padding:20px;}
+#chat-box{background:#fff;border-radius:10px;padding:15px;box-shadow:0 1px 3px rgba(0,0,0,0.1);max-height:500px;overflow-y:auto;display:flex;flex-direction:column;}
+.chat-message{margin:5px 0;padding:8px;border-radius:8px;max-width:70%;}
+.chat-message.sender{background:#dcf8c6;align-self:flex-start;}
+.chat-message.receiver{background:#fff;align-self:flex-end;}
+#chat-form{margin-top:10px;display:flex;flex-direction:column;}
+#chat-form textarea{width:100%;border-radius:6px;border:1px solid #ccc;padding:5px;font-family:inherit;}
+#chat-form button{background-color:#1877f2;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;margin-top:5px;}
+#chat-form button:hover{background-color:#145dc6;}
+@media(max-width:768px){.sidebar{width:60px;}.sidebar h2,.sidebar a{display:none;}header{left:60px;}main{margin-left:60px;}}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
-    <header>
-	<h1>Chat with <?php echo $partner ? $partner['username'] : 'Select a Chat Partner'; ?></h1><br>
-<a href="profile.php">Voltar para perfil</a><br>
-<a href="user_list.php">Falar com Amigos</a><br>
+<div class="sidebar">
+<img src="Logo Connect Osasco Branca.svg" alt="Logo">
+<h2>ConnectMed</h2>
+<a href="profile.php">Meu Perfil</a>
+<a href="user_list.php">Chat</a>
+<a href="events.php">Mural de Eventos</a>
+<a href="logout.php">Sair</a>
+</div>
 
-    </header>
-    <main>
-        <div id="chat-box">
-            <?php foreach ($chatHistory as $chat): ?>
-                <div class="chat-message">
-                    <p><?php echo $chat['sender_username']; ?> to <?php echo $chat['receiver_username']; ?> at <?php echo $chat['timestamp']; ?></p>
-                    <p><?php echo $chat['message']; ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <?php if ($partner): ?>
-            <!-- Chat form -->
-            <form id="chat-form">
-                <input type="hidden" name="receiver" value="<?php echo $partner_id; ?>">
-                <label for="message">Message:</label>
-                <textarea name="message" id="message" rows="4" cols="50" required></textarea>
-                <br>
-                <button type="submit">Send Message</button>
-            </form>
-        <?php else: ?>
-            <p>Select a user to start a chat.</p>
-        <?php endif; ?>
-    </main>
+<header>
+<img src="Logo Connect Osasco Branca.svg" alt="Logo">
+<div>
+<strong><?= htmlspecialchars($user['username']) ?></strong><br>
+<small><?= htmlspecialchars($user['email']) ?></small>
+</div>
+</header>
 
+<main>
+<h2>Chat com <?= $partner ? $partner['username'] : 'Selecione um usuário' ?></h2>
+<div id="chat-box">
+<!-- mensagens serão carregadas pelo fetch antigo -->
+</div>
 
+<?php if($partner): ?>
+<form id="chat-form">
+<input type="hidden" name="receiver" value="<?= $partner_id ?>">
+<textarea name="message" rows="3" required></textarea>
+<button type="submit">Enviar</button>
+</form>
+<?php else: ?>
+<p>Selecione um usuário para iniciar a conversa.</p>
+<?php endif; ?>
+</main>
 
 <script>
-    $(document).ready(function() {
-        function updateChat() {
-            $.ajax({
-                url: 'fetch_messages.php',
-                method: 'POST',
-                data: { partner_id: <?php echo $partner_id; ?> },
-                success: function(response) {
-                    $('#chat-box').html(response);
-                },
-                complete: function() {
-                    setTimeout(updateChat, 5000); // Schedule the next update after a delay (e.g., every 5 seconds)
-                }
-            });
-        }
+$(document).ready(function(){
+    function updateChat(){
+        $.post('fetch_messages.php',{ partner_id: <?= $partner_id ?> }, function(res){
+            $('#chat-box').html(res);
+            $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+        });
+    }
+    updateChat();
+    setInterval(updateChat,3000);
 
-        // Initial update
-        updateChat();
-
-        // Add your additional JavaScript for sending messages if needed
-        $('#chat-form').submit(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: 'send_message.php',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    // Optionally handle success response
-                    updateChat(); // Update chat after sending a message
-                }
-            });
-            // Clear the message input after sending
-            $('#message').val('');
+    $('#chat-form').submit(function(e){
+        e.preventDefault();
+        $.post('send_message.php',$(this).serialize(),function(){
+            $('textarea[name="message"]').val('');
+            updateChat();
         });
     });
+});
 </script>
-
 </body>
 </html>
-
-<?php
-function fetchChatHistory($pdo, $user_id, $partner_id) {
-    $query = "
-        SELECT c.message, c.timestamp, u.username AS sender_username, ur.username AS receiver_username
-        FROM chats c
-        INNER JOIN users u ON c.sender_id = u.user_id
-        INNER JOIN users ur ON c.receiver_id = ur.user_id
-        WHERE (c.sender_id = ? AND c.receiver_id = ?) OR (c.sender_id = ? AND c.receiver_id = ?)
-        ORDER BY c.timestamp ASC";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([$user_id, $partner_id, $partner_id, $user_id]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-?>
 

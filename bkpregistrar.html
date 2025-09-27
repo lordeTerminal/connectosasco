@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta charset="utf-8">
+                <title>registo de usuarios</title>
+        </head>
+        <body>
+                <form method="POST" action="register.php">
+			<input type="text" name="username" placeholder="Username" required><br>
+			<input type="email" name="email" placeholder="Email" required><br>
+			<input type="password" name="password" placeholder="Password" required><br>
+                        <select name="role">
+                                <option value="Doctor">Doctor</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Staff">Staff</option>
+			</select><br>
+                        <button type="submit">Register</button>
+                </form>
+        </body>
+</html>
+
