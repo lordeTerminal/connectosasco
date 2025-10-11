@@ -13,8 +13,8 @@
   </head>
   <body>
     <section class="forms-section">
-      <div class="logo">
-        <img
+      <div class="logo-indexPHP">
+        <img 
           class="logotipo"
           src="./Logo Connect Osasco Branca.svg"
           alt="logotipo connect osasco"
@@ -22,7 +22,7 @@
       </div>
       <div class="forms">
         <!-- Formulário de Login -->
-        <div class="form-wrapper is-active">
+        <div class="form-wrapper is-active f-indexPHP">
           <button type="button" class="switcher switcher-login">
             Entrar
             <span class="underline"></span>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Formulário de Registro -->
-        <div class="form-wrapper">
+        <div class="form-wrapper form-registro">
           <button type="button" class="switcher switcher-signup">
             Registrar
             <span class="underline"></span>
