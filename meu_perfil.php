@@ -9,17 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$host = 'localhost';
-$username = 'root';
-$password = 'golimar10*';
-$database = 'saudeosasco';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+require __DIR__ . '/db.php';
 
 $user_id = $_SESSION['user_id'];
 
@@ -64,30 +54,17 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 <title>ConnectMed - Meu Perfil</title>
 <link rel="icon" href="Logo Connect Osasco Branca.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {margin:0;font-family:"Segoe UI", Tahoma, sans-serif;background:#f0f2f5;color:#333;}
-.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:#1877f2;color:#fff;display:flex;flex-direction:column;align-items:center;padding-top:20px;}
-.sidebar img{width:120px;margin-bottom:10px;}
-.sidebar h2{font-size:18px;margin-bottom:20px;}
-.sidebar a{color:#fff;text-decoration:none;margin:8px 0;display:block;width:100%;text-align:center;padding:8px;border-radius:8px;transition:background 0.2s;}
-.sidebar a:hover{background:rgba(255,255,255,0.2);}
-header{position:fixed;top:0;left:220px;right:0;height:60px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 20px;z-index:10;}
-header .user-info{display:flex;align-items:center;}
-header img{height:35px;margin-right:10px;}
-main{margin-left:220px;margin-top:70px;max-width:700px;padding:20px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-main img{width:140px;height:140px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 15px auto;}
-main h2,main h3{text-align:center;margin-bottom:10px;}
-main p{text-align:center;margin:5px 0;}
-main form{margin-top:20px;}
-main form label{display:block;margin-top:15px;font-weight:bold;}
-main form input[type="file"], main form textarea{width:100%;padding:8px;margin-top:5px;border-radius:6px;border:1px solid #ccc;}
-main form button{margin-top:20px;background-color:#1877f2;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;}
-main form button:hover{background-color:#145dc6;}
-main a{display:block;text-align:center;margin-top:15px;color:#1877f2;text-decoration:none;}
-main a:hover{text-decoration:underline;}
-@media (max-width:768px){.sidebar{width:60px;}.sidebar h2,.sidebar a{display:none;}header{left:60px;}main{margin-left:60px;}}
-</style>
+<link rel="stylesheet" href="meuPerfil.css">
+<!-- Menu dropdown -->
+<link 
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+  rel="stylesheet" 
+  integrity="sha384-g6cAYG0+v+zF49HqCJdZc9d3Kn1z3R3CvLqCvhQ0j5f1F26lTD+53dYHq1mWnJbR" 
+  crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoIhFZC1I1lFj7kMxZb6E6ntjM8zYd2sSkV9Bl+GJp6mZ9E" crossorigin="anonymous"></script>
+
 </head>
+
 <body>
 <div class="sidebar">
     <img src="Logo Connect Osasco Branca.svg" alt="Logo">
@@ -100,14 +77,52 @@ main a:hover{text-decoration:underline;}
     <a href="logout.php">Sair</a>
 </div>
 
-<header>
-    <div class="user-info">
-        <img src="Logo Connect Osasco Branca.svg" alt="Logo">
-        <div>
-            <strong><?= htmlspecialchars($user['username']); ?></strong><br>
-            <small><?= htmlspecialchars($user['email']); ?></small>
-        </div>
+<header class="navbar navbar-expand-md navbar-dark bg-primary fixed-top shadow-sm py-2">
+  <div class="container-fluid">
+
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="profile.php" style="text-decoration:none;">
+      <img src="Logo Connect Osasco Branca.svg" alt="Logo" height="34">
+      <span class="fw-semibold d-none d-sm-inline">Connect Osasco</span>
+    </a>
+
+    <!-- Info do usuário (nome + email) -->
+    <div class="user-info d-none d-md-flex align-items-center text-white me-2">
+      <div class="ms-2 lh-sm">
+        <strong class="d-block small"><?php echo htmlspecialchars($user['username']); ?></strong>
+        <small class="opacity-75"><?php echo htmlspecialchars($user['email']); ?></small>
+      </div>
     </div>
+
+    <!-- Botão hambúrguer (aparece < 768px) -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alternar navegação">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Itens de navegação -->
+    <nav class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ms-auto align-items-md-center">
+        <!-- Em telas pequenas, mostramos a info do usuário dentro do menu -->
+        <li class="nav-item d-md-none px-2 py-1">
+          <div class="text-white-50 small">
+            <strong class="text-white d-block"><?php echo htmlspecialchars($user['username']); ?></strong>
+            <?php echo htmlspecialchars($user['email']); ?>
+          </div>
+          <hr class="my-2 border-light opacity-25">
+        </li>
+
+        <li class="nav-item"><a class="nav-link" href="profile.php">Feed</a></li>
+        <li class="nav-item"><a class="nav-link" href="profile.php">Meu Perfil</a></li>
+        <li class="nav-item"><a class="nav-link" href="criar_post.php">Criar Post</a></li>
+        <li class="nav-item"><a class="nav-link" href="user_list.php">Chat</a></li>
+        <li class="nav-item"><a class="nav-link" href="events.php">Eventos</a></li>
+        <li class="nav-item"><a class="nav-link" href="logout.php">Sair</a></li>
+      </ul>
+    </nav>
+
+  </div>
 </header>
 
 <main>

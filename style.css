@@ -35,12 +35,23 @@ body {
   align-items: center;
 }
 
+.logo-login{
+  width: 35%;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  top: 5%;
+}
+/* 
 .logotipo {
   width: 100%;
-}
+} */
 
 .forms-section {
   display: flex;
+  width: 100%;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -57,7 +68,27 @@ body {
 .forms {
   display: flex;
   align-items: flex-start;
-  margin-top: 30px;
+  margin-top: 0px;
+}
+
+.forms-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forms-login input{
+  width: 150%;
+}
+
+.f-login{
+  position: fixed;
+  top: 43%;
+}
+
+h2.form-title{
+  margin-left: 0%;
+  color: whitesmoke;
 }
 
 .form-wrapper {
@@ -331,7 +362,57 @@ body {
   body {
     background-image: url(./Fundo\ Mobile\ Tela\ Login.svg);
   }
+  .forms-section{
+    display: block;
+    height: 100vh;
+    margin-left: 250px;
+    margin-bottom: 0;
+  }
+  h2.form-title{
+    margin-left: -80px;
+    color: whitesmoke
+  }
+
+  .f-login{
+    position: fixed;
+    top: -50%;
+  }
+  .logo-login{
+    display: block;
+    width: auto;
+  }
+  .forms-registrar{
+    transform: translate(50%, -50%);
+  }
+
+  .logo-registrar{
+    position: fixed;
+    left: 2%;
+    width: 70%;
+  }
+
+  .f-indexPHP{
+    transform: translate(-50%, 20%);
+    width: 70%;
+  }
+
+  .logo-indexPHP{
+    position: fixed;
+    left: 2%;
+    width: 70%;
+  }
+
+  .logo-indexPHP img{
+    width: 20%;
+  }
+
+  .form-registro{
+    transform: translate(-60%, 8%);
+    width: 80%;
+  }
+
 }
+
 .post {
   border: 1px solid #ccc;
   padding: 15px;

@@ -1,0 +1,107 @@
+/* Base */
+:root {
+  --header-h: 56px;
+}
+
+body {
+  background-color: #f3f2ef; /* vibe LinkedIn */
+  color: #333;
+}
+
+/* Força o background do header/navbar */
+.navbar {
+  background-color: #1877f2 !important; /* azul estilo Facebook/LinkedIn */
+  color: whitesmoke;
+}
+
+.mobile-nav{
+    background-color: #1877f2 !important; /* azul estilo Facebook/LinkedIn */
+    color: whitesmoke;
+}
+
+
+/* Header compensação  */
+.layout-3col {
+  margin-top: calc(var(--header-h) + 35px);
+}
+
+/* Avatares */
+.avatar {
+  width: 36px;
+  height: 36px;
+  font-weight: 700;
+}
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Ícones do topo (desktop) */
+.top-icons .nav-link {
+  color: #666;
+  text-decoration: none;
+}
+.top-icons .nav-link:hover { color: #0a66c2; color: whitesmoke; }
+.top-icons .small { font-size: .7rem; line-height: 1; color: whitesmoke; }
+
+/* Cards/Feed */
+.card { border: 1px solid #e0dfdc; }
+.xsmall { font-size: .75rem; }
+
+/* Colunas: no desktop, 3 colunas; no mobile, 1 col */
+@media (min-width: 992px) {
+  .layout-3col .row { align-items: flex-start; }
+}
+
+/* Criar post */
+textarea.form-control {
+  background: #f9fafb;
+}
+
+/* MOBILE NAV BOTTOM */
+.mobile-nav { height: 56px; }
+.mobile-nav ul { list-style: none; }
+.mobile-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0;
+  width: 25%;
+  color: #666;
+  text-decoration: none;
+  font-size: .75rem;
+}
+.mobile-link i {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.mobile-link span {
+  font-size: .7rem;
+  line-height: 1;
+}
+.mobile-link:hover { color: #0a66c2; }
+
+/* Sidebar antiga: escondemos no mobile via grid/Bootstrap (já controlado no HTML) */
+
+/* Ajustes finos de inputs */
+input.form-control, .input-group-text {
+  background-color: #f5f5f5;
+  border-color: #e2e2e2;
+}
+input.form-control:focus, textarea.form-control:focus {
+  background-color: #fff;
+  border-color: #0a66c2;
+  box-shadow: 0 0 0 .2rem rgba(10,102,194,.15);
+}
+
+/* Botões */
+.btn-primary {
+  background-color: #0a66c2;
+  border-color: #0a66c2;
+}
+.btn-primary:hover {
+  background-color: #004182;
+  border-color: #004182;
+}
