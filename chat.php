@@ -68,7 +68,7 @@ main{margin-left:220px;margin-top:70px;max-width:700px;padding:20px;}
 <body>
 <div class="sidebar">
 <img src="Logo Connect Osasco Branca.svg" alt="Logo">
-<h2>ConnectMed</h2>
+<h2>:)</h2>
 <a href="profile.php">Meu Perfil</a>
 <a href="user_list.php">Chat</a>
 <a href="events.php">Mural de Eventos</a>

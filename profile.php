@@ -52,7 +52,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>ConnectMed - Perfil</title>
+    <title>:) - Perfil</title>
     <link rel="icon" href="Logo Connect Osasco Branca.svg" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -182,7 +182,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="sidebar">
         <img src="Logo Connect Osasco Branca.svg" alt="Logo">
-        <h2>ConnectMed</h2>
+        <h2>:)</h2>
         <a href="meu_perfil.php">Meu Perfil</a>
         <a href="profile.php">Feed</a>
         <a href="user_list.php">Chat</a>
